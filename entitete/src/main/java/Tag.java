@@ -1,7 +1,24 @@
+import javax.persistence.*;
+
+@Entity(name = "tag")
+@NamedQueries(value = {
+        @NamedQuery(name = "Tag.getAll", query = "SELECT t FROM tag t")
+})
 public class Tag {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String name;
 
     public Tag() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

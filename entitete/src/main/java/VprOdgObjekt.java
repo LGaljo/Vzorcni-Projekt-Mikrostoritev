@@ -1,8 +1,25 @@
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity(name = "qna")
 public class VprOdgObjekt {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String question;
-    private Object[] answers;
+    private Integer answers;
 
     public VprOdgObjekt() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getQuestion() {
@@ -13,11 +30,11 @@ public class VprOdgObjekt {
         this.question = question;
     }
 
-    public Object[] getAnswers() {
+    public Integer getAnswers() {
         return answers;
     }
 
-    public void setAnswers(Object[] answers) {
+    public void setAnswers(Integer answers) {
         this.answers = answers;
     }
 }

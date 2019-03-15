@@ -1,16 +1,19 @@
+package si.lg.vzorcni.entitete;
+
 import javax.persistence.*;
 
-@Entity(name = "tag")
+@Entity(name = "uporabnik")
 @NamedQueries(value = {
-        @NamedQuery(name = "Tag.getAll", query = "SELECT t FROM tag t")
+        @NamedQuery(name = "si.lg.vzorcni.entitete.Uporabnik.getAll", query = "SELECT u FROM uporabnik u")
 })
-public class Tag {
+public class Uporabnik {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
 
-    public Tag() {
+    public Uporabnik() {
     }
 
     public Integer getId() {

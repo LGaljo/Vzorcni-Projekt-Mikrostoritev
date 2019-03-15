@@ -1,5 +1,8 @@
+package si.lg.vzorcni.storitve;
+
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import com.kumuluz.ee.rest.utils.JPAUtils;
+import si.lg.vzorcni.entitete.Tag;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -8,7 +11,7 @@ import java.util.List;
 
 @ApplicationScoped
 public class TagZrno {
-    @PersistenceContext(unitName = "test")
+    @PersistenceContext(unitName = "vzorcni-projekt")
     private EntityManager entityManager;
 
     public List<Tag> getTags(QueryParameters queryParameters) {

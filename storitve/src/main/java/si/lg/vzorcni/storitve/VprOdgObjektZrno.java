@@ -1,3 +1,7 @@
+package si.lg.vzorcni.storitve;
+
+import si.lg.vzorcni.entitete.VprOdgObjekt;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -5,7 +9,7 @@ import javax.transaction.Transactional;
 
 @ApplicationScoped
 public class VprOdgObjektZrno {
-    @PersistenceContext(name = "test")
+    @PersistenceContext(name = "vzorcni-projekt")
     private EntityManager entityManager;
 
     public VprOdgObjekt getQuestionByID(Integer id) {
@@ -13,7 +17,7 @@ public class VprOdgObjektZrno {
     }
 
     @Transactional(Transactional.TxType.REQUIRED)
-    public void addAnswer(Integer VprOdgId, ) {
+    public void addAnswer(Integer VprOdgId, String odgovor) {
 
     }
 }

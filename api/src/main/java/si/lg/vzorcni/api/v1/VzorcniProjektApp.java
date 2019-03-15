@@ -1,4 +1,4 @@
-package v1;
+package si.lg.vzorcni.api.v1;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;

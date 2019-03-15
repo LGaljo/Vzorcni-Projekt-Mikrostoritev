@@ -1,7 +1,7 @@
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+package si.lg.vzorcni.entitete;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity(name = "qna")
 public class VprOdgObjekt {
@@ -9,7 +9,9 @@ public class VprOdgObjekt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String question;
-    private Integer answers;
+
+    @ElementCollection
+    private List<String> answers;
 
     public VprOdgObjekt() {
     }
@@ -30,11 +32,11 @@ public class VprOdgObjekt {
         this.question = question;
     }
 
-    public Integer getAnswers() {
+    public List<String> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(Integer answers) {
+    public void setAnswers(List<String> answers) {
         this.answers = answers;
     }
 }

@@ -22,7 +22,10 @@
             <artifactId>entitete</artifactId>
             <version>1.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.kumuluz.ee</groupId>
+            <artifactId>kumuluzee-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
             <artifactId>kumuluzee-servlet-jetty</artifactId>

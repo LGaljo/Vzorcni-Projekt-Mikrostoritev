@@ -1,11 +1,11 @@
 kumuluzee:
   name: vzorcni-projekt
-    version: 1.0.0
-    env:
-      name: dev
-    datasources:
-      - jndi-name: jdbc/sense
-        connection-url: jdbc:postgresql://192.168.99.100:5432/vzorcni-projekt
-        username: postgres
-        password: postgres
-        max-pool-size: 20
+  version: 1.0.0
+  env:
+    name: dev
+  datasources:
+    - jndi-name: jdbc/sense
+      connection-url: jdbc:postgresql://192.168.99.100:5432/vzorcni-projekt
+      username: postgres
+      password: postgres
+      max-pool-size: 20

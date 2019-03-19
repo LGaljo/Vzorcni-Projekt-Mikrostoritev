@@ -14,7 +14,7 @@ public class VprasanjeZrno {
     private EntityManager entityManager;
 
     public Vprasanje pridobiVprasanje(Integer id) {
-        return entityManager.createNamedQuery("Vprasanje.getVprasanjeById", Vprasanje.class).setParameter("id", id).getSingleResult();
+        return entityManager.createNamedQuery("Vprasanje.getVprasanjeById", Vprasanje.class).setParameter("vprasanje_id", id).getSingleResult();
     }
 
     public List<Vprasanje> pridobiVprasanjeTAG(Tag tag) {

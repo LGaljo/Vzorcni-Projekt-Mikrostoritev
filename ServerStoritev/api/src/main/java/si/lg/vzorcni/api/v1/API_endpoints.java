@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import si.lg.vzorcni.entitete.Uporabnik;
 import si.lg.vzorcni.entitete.Vprasanje;
@@ -22,12 +23,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 @Path("api")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class API_endpoints {
+    private Logger log = Logger.getLogger(this.getClass().toString());
+
     @Context
     protected UriInfo uriInfo;
 
@@ -122,20 +126,23 @@ public class API_endpoints {
                             responseCode = "400",
                             description = "No questions found"
                     )})
-    @Path("vprasanje/{vpr_id}")
+    @Path("vprasanje/{vpr_id}/{value}")
     @POST
     public Response dodajOdgovor(
             @Parameter(description = "This is an ID of a question.", required = true)
             @PathParam("vpr_id") Integer vprID,
             @Parameter(description = "This is an answer.", required = true)
-                    Integer value) {
+            @PathParam("value") Integer value) {
 
         if (value == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Please return an answer.").build();
         }
-        Double newVal = odgovorZrno.dodajOdgovor(vprasanjeZrno.pridobiVprasanje(vprID), value);
-
-        return Response.ok().entity(newVal).build();
+        Vprasanje trenutno = vprasanjeZrno.pridobiVprasanje(vprID);
+        Double newVal = odgovorZrno.dodajOdgovor(trenutno, value);
+        return Response
+                .ok()
+                .entity(newVal)
+                .build();
     }
 
     @Path("value/{vpr_id}")

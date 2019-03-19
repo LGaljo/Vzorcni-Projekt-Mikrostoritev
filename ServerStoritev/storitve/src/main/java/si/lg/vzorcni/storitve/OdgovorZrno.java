@@ -29,8 +29,18 @@ public class OdgovorZrno {
         o.setQuestion(vpr);
         o.setAnswer(odgovor);
 
+        try {
+            entityManager.persist(o);
+            entityManager.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         List<Odgovor> qs = entityManager.createNamedQuery("Odgovor.getByQuestion", Odgovor.class).setParameter("q_id", vpr.getId()).getResultList();
 
+        if (qs.isEmpty()) {
+            return 0.0;
+        }
         return pridobiPovprecje(qs);
     }
 

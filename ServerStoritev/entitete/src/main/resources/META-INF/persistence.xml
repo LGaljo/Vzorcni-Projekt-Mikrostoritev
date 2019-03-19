@@ -5,7 +5,8 @@
 
         <class>si.lg.vzorcni.entitete.Tag</class>
         <class>si.lg.vzorcni.entitete.Uporabnik</class>
-        <class>si.lg.vzorcni.entitete.VprOdgObjekt</class>
+        <class>si.lg.vzorcni.entitete.Odgovor</class>
+        <class>si.lg.vzorcni.entitete.Vprasanje</class>
 
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>

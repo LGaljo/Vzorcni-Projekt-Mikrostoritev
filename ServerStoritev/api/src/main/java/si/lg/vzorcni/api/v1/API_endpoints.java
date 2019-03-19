@@ -3,12 +3,10 @@ package si.lg.vzorcni.api.v1;
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.eclipse.jetty.http2.api.Session;
 import si.lg.vzorcni.entitete.Uporabnik;
 import si.lg.vzorcni.entitete.Vprasanje;
 import si.lg.vzorcni.storitve.TagZrno;
@@ -95,7 +93,7 @@ public class API_endpoints {
     @GET
     public Response pridobiVprasanje(
             @Parameter(description = "Query parameters used to sort entities.", required = true)
-            QueryParameters queryParameters,
+                    QueryParameters queryParameters,
             @Parameter(description = "This is an ID of a tag which is then matched with question.", required = true)
             @PathParam("tag_id") Integer tagID) throws NotFoundException {
         List<Vprasanje> vprasanja = vprasanjeZrno.pridobiVprasanjeTAG(tagZrno.pridobiTag(tagID));
@@ -130,7 +128,7 @@ public class API_endpoints {
             @Parameter(description = "This is an ID of a question.", required = true)
             @PathParam("vpr_id") Integer vprID,
             @Parameter(description = "This is an answer.", required = true)
-            Integer value) {
+                    Integer value) {
 
         if (value == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Please return an answer.").build();
@@ -151,6 +149,6 @@ public class API_endpoints {
                 .ok()
                 .entity(vrednost)
                 .build();
-        }
     }
 }
+

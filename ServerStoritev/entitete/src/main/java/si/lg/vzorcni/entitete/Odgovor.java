@@ -1,7 +1,7 @@
 package si.lg.vzorcni.entitete;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity(name = "response")
 @NamedQueries(value = {

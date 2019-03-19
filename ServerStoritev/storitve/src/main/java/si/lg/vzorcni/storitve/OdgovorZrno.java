@@ -16,11 +16,11 @@ public class OdgovorZrno {
 
     private Double pridobiPovprecje(List<Odgovor> list) {
         Double avg = 0.0;
-        for (Odgovor os : qs) {
+        for (Odgovor os : list) {
             avg += os.getAnswer();
         }
 
-        return avg/qs.size();
+        return avg/list.size();
     }
 
     @Transactional(Transactional.TxType.REQUIRED)

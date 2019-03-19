@@ -2,6 +2,7 @@ package si.lg.vzorcni.api.v1;
 
 import com.kumuluz.ee.rest.beans.QueryParameters;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,36 +45,62 @@ public class API_endpoints {
     @Inject
     private VprasanjeZrno vprasanjeZrno;
 
-    @Operation(description = "Returns a user.", summary = "Users", tags = "users", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "User",
-                    content = @Content(
-                            array = @ArraySchema(schema = @Schema(implementation = Session.class)))
-            )})
+    @Operation(
+            description = "Get user by ID.",
+            summary = "Users",
+            tags = "users",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "User",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Uporabnik.class))),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "User not found"
+                    )})
     @Path("uporabniki/{id}")
     @GET
-    public Response vrniUporabnika(@PathParam("id") Integer id) {
+    public Response vrniUporabnika(
+            @Parameter(description = "This is an ID of a user.", required = true)
+            @PathParam("id") Integer id) throws NotFoundException {
         Uporabnik uporabnik = uporabnikZrno.pridobiUporabnika(id);
 
-        return Response
-                .ok(uporabnik)
-                .build();
+        if (uporabnik != null) {
+            return Response.ok().entity(uporabnik).build();
+        } else {
+            throw new NotFoundException();
+        }
+
     }
 
-    @Operation(description = "Returns list of questions.", summary = "Questions", tags = "questions", responses = {
-            @ApiResponse(responseCode = "200",
-                    description = "Question",
-                    content = @Content(
-                            array = @ArraySchema(schema = @Schema(implementation = Session.class)))
-            )})
+    @Operation(
+            description = "Get list of questions by tag.",
+            summary = "questions",
+            tags = "questions",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Question",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Vprasanje.class))),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "No questions found"
+                    )})
     @Path("vprasanje/{tag_id}")
     @GET
-    public Response pridobiVprasanje(QueryParameters queryParameters, @PathParam("tag_id") Integer tagID) {
+    public Response pridobiVprasanje(
+            @Parameter(description = "Query parameters used to sort entities.", required = true)
+            QueryParameters queryParameters,
+            @Parameter(description = "This is an ID of a tag which is then matched with question.", required = true)
+            @PathParam("tag_id") Integer tagID) throws NotFoundException {
         List<Vprasanje> vprasanja = vprasanjeZrno.pridobiVprasanjeTAG(tagZrno.pridobiTag(tagID));
 
-        return Response
-                .status(Response.Status.OK)
-                .entity(vprasanja)
-                .build();
+        if (vprasanja.isEmpty()) {
+            throw new NotFoundException();
+        } else {
+            return Response.ok().entity(vprasanja).build();
+        }
     }
 }

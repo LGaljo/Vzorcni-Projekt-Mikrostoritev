@@ -4,7 +4,8 @@ import javax.persistence.*;
 
 @Entity(name = "tag")
 @NamedQueries(value = {
-        @NamedQuery(name = "si.lg.vzorcni.entitete.Tag.getAll", query = "SELECT t FROM tag t")
+        @NamedQuery(name = "Tag.getAll", query = "SELECT t FROM tag t"),
+        @NamedQuery(name = "Tag.getByID", query = "SELECT t FROM tag t WHERE t.id = :id"),
 })
 public class Tag {
     @Id

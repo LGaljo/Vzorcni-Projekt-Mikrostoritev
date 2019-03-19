@@ -18,11 +18,15 @@ public class UporabnikZrno {
         if (queryParameters != null) {
             return JPAUtils.queryEntities(entityManager, Uporabnik.class, queryParameters);
         } else {
-            return entityManager.createNamedQuery("si.lg.vzorcni.entitete.Uporabnik.getAll").getResultList();
+            return entityManager.createNamedQuery("Uporabnik.getAll", Uporabnik.class).getResultList();
         }
     }
 
     public Long pridobiUporabnikiCount(QueryParameters queryParameters) {
         return JPAUtils.queryEntitiesCount(entityManager, Uporabnik.class, queryParameters);
+    }
+
+    public Uporabnik pridobiUporabnika(Integer id) {
+        return entityManager.createNamedQuery("Uporabnik.getById", Uporabnik.class).setParameter("id", id).getSingleResult();
     }
 }

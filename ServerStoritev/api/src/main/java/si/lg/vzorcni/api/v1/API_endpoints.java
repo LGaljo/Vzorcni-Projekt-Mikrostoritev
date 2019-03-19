@@ -71,7 +71,6 @@ public class API_endpoints {
         } else {
             throw new NotFoundException();
         }
-
     }
 
     @Operation(
@@ -82,8 +81,12 @@ public class API_endpoints {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Question",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Vprasanje.class))),
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = Vprasanje.class)
+                                    )
+                            )),
                     @ApiResponse(
                             responseCode = "400",
                             description = "No questions found"
@@ -100,7 +103,54 @@ public class API_endpoints {
         if (vprasanja.isEmpty()) {
             throw new NotFoundException();
         } else {
-            return Response.ok().entity(vprasanja).build();
+            return Response
+                    .ok()
+                    .entity(vprasanja)
+                    .header("X-Total-Count", vprasanja.size())
+                    .build();
+        }
+    }
+
+    @Operation(
+            description = "Return answer to a specific question.",
+            summary = "Response",
+            tags = "questions",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "No questions found"
+                    )})
+    @Path("vprasanje/{vpr_id}")
+    @POST
+    public Response dodajOdgovor(
+            @Parameter(description = "This is an ID of a question.", required = true)
+            @PathParam("vpr_id") Integer vprID,
+            @Parameter(description = "This is an answer.", required = true)
+            Integer value) {
+
+        if (value == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Please return an answer.").build();
+        }
+        Double newVal = odgovorZrno.dodajOdgovor(vprasanjeZrno.pridobiVprasanje(vprID), value);
+
+        return Response.ok().entity(newVal).build();
+    }
+
+    @Path("value/{vpr_id}")
+    @GET
+    public Response pridobiVrednost(
+            @Parameter(description = "This is an ID of a tag which is then matched with question.", required = true)
+            @PathParam("vpr_id") Integer vpr_id) throws NotFoundException {
+        Double vrednost = odgovorZrno.pridobiVrednost(vprasanjeZrno.pridobiVprasanje(vpr_id));
+
+        return Response
+                .ok()
+                .entity(vrednost)
+                .build();
         }
     }
 }

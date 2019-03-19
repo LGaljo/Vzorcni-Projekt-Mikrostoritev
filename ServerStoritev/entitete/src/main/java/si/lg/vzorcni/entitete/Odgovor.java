@@ -2,11 +2,11 @@ package si.lg.vzorcni.entitete;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.List;
 
 @Entity(name = "response")
 @NamedQueries(value = {
-        @NamedQuery(name = "si.lg.vzorcni.entitete.Odgovor.getAll", query = "SELECT r FROM response r ORDER BY r.date DESC")
+        @NamedQuery(name = "Odgovor.getAll", query = "SELECT r FROM response r ORDER BY r.date DESC"),
+        @NamedQuery(name = "Odgovor.getByQuestion", query = "SELECT r FROM response r WHERE r.question.id = :q_id ORDER BY r.date DESC")
 })
 public class Odgovor {
     @Id
@@ -14,6 +14,7 @@ public class Odgovor {
     private Integer id;
     @ManyToOne
     private Vprasanje question;
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
     private Integer answer;
 

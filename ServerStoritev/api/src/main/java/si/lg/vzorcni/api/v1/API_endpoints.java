@@ -8,9 +8,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.eclipse.jetty.http2.api.Session;
+import si.lg.vzorcni.entitete.Uporabnik;
+import si.lg.vzorcni.entitete.Vprasanje;
 import si.lg.vzorcni.storitve.TagZrno;
 import si.lg.vzorcni.storitve.UporabnikZrno;
-import si.lg.vzorcni.storitve.VprOdgObjektZrno;
+import si.lg.vzorcni.storitve.OdgovorZrno;
+import si.lg.vzorcni.storitve.VprasanjeZrno;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,6 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 @ApplicationScoped
 @Path("api")
@@ -35,24 +39,41 @@ public class API_endpoints {
     private UporabnikZrno uporabnikZrno;
 
     @Inject
-    private VprOdgObjektZrno vprOdgObjektZrno;
+    private OdgovorZrno odgovorZrno;
 
-    @Operation(description = "Returns list of users.", summary = "Users list", tags = "users", responses = {
+    @Inject
+    private VprasanjeZrno vprasanjeZrno;
+
+    @Operation(description = "Returns a user.", summary = "Users", tags = "users", responses = {
             @ApiResponse(responseCode = "200",
-                    description = "List of users",
+                    description = "User",
                     content = @Content(
-                            array = @ArraySchema(schema = @Schema(implementation = Session.class))),
-                    headers = {@Header(name = "X-Total-Count", schema = @Schema(type = "integer"))}
+                            array = @ArraySchema(schema = @Schema(implementation = Session.class)))
             )})
     @Path("uporabniki/{id}")
     @GET
-    public Response vrniUporabnike(@PathParam("id") Integer id) {
-        QueryParameters query = QueryParameters.query(uriInfo.getRequestUri().getQuery()).build();
-        Long uporabnikiCount = uporabnikZrno.pridobiUporabnikiCount(query);
+    public Response vrniUporabnika(@PathParam("id") Integer id) {
+        Uporabnik uporabnik = uporabnikZrno.pridobiUporabnika(id);
 
         return Response
-                .ok(uporabnikZrno.pridobiUporabnike(query))
-                .header("X-Total-Count", uporabnikiCount)
+                .ok(uporabnik)
+                .build();
+    }
+
+    @Operation(description = "Returns list of questions.", summary = "Questions", tags = "questions", responses = {
+            @ApiResponse(responseCode = "200",
+                    description = "Question",
+                    content = @Content(
+                            array = @ArraySchema(schema = @Schema(implementation = Session.class)))
+            )})
+    @Path("vprasanje/{tag_id}")
+    @GET
+    public Response pridobiVprasanje(QueryParameters queryParameters, @PathParam("tag_id") Integer tagID) {
+        List<Vprasanje> vprasanja = vprasanjeZrno.pridobiVprasanjeTAG(tagZrno.pridobiTag(tagID));
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(vprasanja)
                 .build();
     }
 }

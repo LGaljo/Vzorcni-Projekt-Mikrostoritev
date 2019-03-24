@@ -145,6 +145,15 @@ public class API_endpoints {
                 .build();
     }
 
+    @Path("tags")
+    @GET
+    public Response pridobiTage() {
+        return  Response
+                .ok()
+                .entity(tagZrno.pridobiVseTage())
+                .build();
+    }
+
     @Path("value/{vpr_id}")
     @GET
     public Response pridobiVrednost(

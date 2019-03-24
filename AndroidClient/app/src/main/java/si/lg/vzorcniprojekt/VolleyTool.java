@@ -42,8 +42,8 @@ public class VolleyTool {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Volley", "Napaka pri pridobivanju podatkov");
-                callback.getResponse("Error");
+                Log.d("Volley", error.toString());
+                callback.getResponse(error.toString());
             }
         }) {
             @Override

@@ -5,7 +5,7 @@ kumuluzee:
     name: dev
   datasources:
     - jndi-name: jdbc/sense
-      connection-url: jdbc:postgresql://192.168.99.100:5432/vzorcni-projekt
-      username: postgres
-      password: postgres
-      max-pool-size: 20
+      connection-url: jdbc:postgresql://manny.db.elephantsql.com:5432/soovegrb
+      username: soovegrb
+      password: WKQHRMQOqPvDSSGqYDmlXgsatJi4a9Oz
+      max-pool-size: 5

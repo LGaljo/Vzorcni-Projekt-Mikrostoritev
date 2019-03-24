@@ -1,33 +1,34 @@
-package si.lg.vzorcniprojekt;
+package si.lg.vzorcniprojekt.Tasks;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
-import java.nio.channels.Channel;
+import si.lg.vzorcniprojekt.Objects.Question;
+import si.lg.vzorcniprojekt.Objects.SaveObj;
+import si.lg.vzorcniprojekt.R;
 
-public class MainActivity extends AppCompatActivity {
+public class ScheduledTaskShowNotification implements Runnable {
+    private static final String TAG = "ScheduledTaskShowNotification";
+    private Context context;
     private String channelId = "my_channel";
     private String channelName = "Channel Name";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        sendNotification();
+    public ScheduledTaskShowNotification(Context context) {
+        this.context = context;
     }
 
-    private void sendNotification() {
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+    public void run() {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, channelId)
+        int q = (int)(Math.random() * SaveObj.questions.size() + 1);
+
+        Question question = SaveObj.questions.get(q);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Ali je trenutno gneča na postajališču?")
+                .setContentTitle(question.question)
                 .setContentText("Za odgovor se dotaknite obvestila")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true);

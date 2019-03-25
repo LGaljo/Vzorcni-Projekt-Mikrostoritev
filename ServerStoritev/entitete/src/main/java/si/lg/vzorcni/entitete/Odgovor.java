@@ -16,6 +16,7 @@ public class Odgovor {
     private Vprasanje question;
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+    @Column(columnDefinition = "int default 0")
     private Integer answer;
 
     public Odgovor() {

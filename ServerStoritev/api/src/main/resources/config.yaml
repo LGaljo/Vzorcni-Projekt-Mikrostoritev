@@ -7,5 +7,19 @@ kumuluzee:
     - jndi-name: jdbc/sense
       connection-url: jdbc:postgresql://manny.db.elephantsql.com:5432/soovegrb
       username: soovegrb
-      password: WKQHRMQOqPvDSSGqYDmlXgsatJi4a9Oz
-      max-pool-size: 5
+      password: I65GuuTJAqYJtWNoShB1hkoTmVftTrl3
+      max-pool-size: 1
+  health:
+    servlet:
+      mapping: /health
+      enabled: true
+    logs:
+      enabled: true
+      level: INFO
+      period-s: 30
+    checks:
+      #data-source-health-check:
+        #jndi-name: jdbc/sense
+        #connection-url: jdbc:postgresql://manny.db.elephantsql.com:5432/soovegrb?user=soovegrb&password=I65GuuTJAqYJtWNoShB1hkoTmVftTrl3
+      disk-space-health-check:
+        treshold: 100000000

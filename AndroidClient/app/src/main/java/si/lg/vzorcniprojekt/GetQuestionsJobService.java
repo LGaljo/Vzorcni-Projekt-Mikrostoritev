@@ -12,14 +12,14 @@ public class GetQuestionsJobService extends JobService {
 
     @Override
     public boolean onStartJob(JobParameters params) {
-        Log.d(TAG, "Job started");
+        Log.d(TAG, "Job started 0");
         task(params);
         return true;
     }
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        Log.d(TAG, "Job stopped");
+        Log.d(TAG, "Job stopped 0");
         return false;
     }
 

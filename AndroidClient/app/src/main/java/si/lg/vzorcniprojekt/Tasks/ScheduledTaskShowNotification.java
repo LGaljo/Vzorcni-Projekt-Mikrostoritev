@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import si.lg.vzorcniprojekt.Objects.Question;
 import si.lg.vzorcniprojekt.Objects.SaveObj;
@@ -20,9 +21,10 @@ public class ScheduledTaskShowNotification implements Runnable {
     }
 
     public void run() {
+        Log.d(TAG, "Prikaži obvestila");
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        int q = (int)(Math.random() * SaveObj.questions.size() + 1);
+        int q = (int)(Math.random() * SaveObj.questions.size());
 
         Question question = SaveObj.questions.get(q);
 

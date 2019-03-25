@@ -12,34 +12,34 @@ public class DataClass extends JobService {
     private static final String TAG = "MainActivity";
 
     public static void scheduleJob(Context context) {
-        ComponentName serviceComponent = new ComponentName(context, GetQuestionsJobService.class);
+        ComponentName serviceComponentQuestions = new ComponentName(context, GetQuestionsJobService.class);
 
-        JobInfo info = new JobInfo.Builder(0, serviceComponent)
-            .setMinimumLatency(10 * 1000)
+        JobInfo infoQs = new JobInfo.Builder(0, serviceComponentQuestions)
+            .setMinimumLatency(1 * 1000)
             .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-            .setOverrideDeadline(40 * 1000)
+            .setOverrideDeadline(4 * 1000)
             .setPersisted(true)
             .build();
-        
+
         JobScheduler jobScheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        int resultCode = jobScheduler.schedule(info);
+        int resultCodeQs = jobScheduler.schedule(infoQs);
         
-        if (resultCode == JobScheduler.RESULT_SUCCESS) {
-            Log.d(TAG, "Job scheduled");
+        if (resultCodeQs == JobScheduler.RESULT_SUCCESS) {
+            Log.d(TAG, "Job 0 scheduled");
         } else {
-            Log.d(TAG, "Job failed");
+            Log.d(TAG, "Job 0 failed");
         }
+
     }
 
-    public void cancelJob() {
-        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+    public static void cancelJob(Context context) {
+        JobScheduler scheduler = (JobScheduler) context.getSystemService(JOB_SCHEDULER_SERVICE);
         scheduler.cancel(0);
         Log.d(TAG, "Job canceled");
     }
 
     @Override
     public boolean onStartJob(final JobParameters params) {
-
         return true;
     }
 

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import si.lg.vzorcni.entitete.OdgovorDTO;
 import si.lg.vzorcni.entitete.Uporabnik;
 import si.lg.vzorcni.entitete.Vprasanje;
 import si.lg.vzorcni.storitve.TagZrno;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -101,14 +103,19 @@ public class API_endpoints {
             @Parameter(description = "This is an ID of a tag which is then matched with question.", required = true)
             @PathParam("tag_id") Integer tagID) throws NotFoundException {
         List<Vprasanje> vprasanja = vprasanjeZrno.pridobiVprasanjeTAG(tagZrno.pridobiTag(tagID));
+        List<OdgovorDTO> list = new ArrayList<>();
 
-        if (vprasanja.isEmpty()) {
+        for (Vprasanje v : vprasanja) {
+            list.add(odgovorZrno.pridobiVrednost(v));
+        }
+
+        if (list.isEmpty()) {
             throw new NotFoundException();
         } else {
             return Response
                     .ok()
-                    .entity(vprasanja)
-                    .header("X-Total-Count", vprasanja.size())
+                    .entity(list)
+                    .header("X-Total-Count", list.size())
                     .build();
         }
     }
@@ -151,19 +158,6 @@ public class API_endpoints {
         return  Response
                 .ok()
                 .entity(tagZrno.pridobiVseTage())
-                .build();
-    }
-
-    @Path("value/{vpr_id}")
-    @GET
-    public Response pridobiVrednost(
-            @Parameter(description = "This is an ID of a tag which is then matched with question.", required = true)
-            @PathParam("vpr_id") Integer vpr_id) throws NotFoundException {
-        Vprasanje vprasanje = vprasanjeZrno.pridobiVprasanje(vpr_id);
-
-        return Response
-                .ok()
-                .entity(odgovorZrno.pridobiVrednost(vprasanje))
                 .build();
     }
 }

@@ -23,3 +23,8 @@ kumuluzee:
         #connection-url: jdbc:postgresql://manny.db.elephantsql.com:5432/soovegrb?user=soovegrb&password=I65GuuTJAqYJtWNoShB1hkoTmVftTrl3
       disk-space-health-check:
         treshold: 100000000
+  cors-filter:
+    annotations:
+      my-resource:
+        allow-origin: "*"
+        allow-subdomains: true

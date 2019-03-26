@@ -4,7 +4,6 @@
         <jta-data-source>jdbc/sense</jta-data-source>
 
         <class>si.lg.vzorcni.entitete.Tag</class>
-        <class>si.lg.vzorcni.entitete.Uporabnik</class>
         <class>si.lg.vzorcni.entitete.Odgovor</class>
         <class>si.lg.vzorcni.entitete.Vprasanje</class>
 

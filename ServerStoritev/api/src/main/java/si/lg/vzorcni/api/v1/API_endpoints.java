@@ -6,13 +6,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import si.lg.vzorcni.entitete.OdgovorDTO;
-import si.lg.vzorcni.entitete.Uporabnik;
+import si.lg.vzorcni.entitete.Tag;
 import si.lg.vzorcni.entitete.Vprasanje;
 import si.lg.vzorcni.storitve.TagZrno;
-import si.lg.vzorcni.storitve.UporabnikZrno;
 import si.lg.vzorcni.storitve.OdgovorZrno;
 import si.lg.vzorcni.storitve.VprasanjeZrno;
 
@@ -25,14 +23,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @ApplicationScoped
 @Path("api")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class API_endpoints {
-    private Logger log = Logger.getLogger(this.getClass().toString());
 
     @Context
     protected UriInfo uriInfo;
@@ -41,41 +37,10 @@ public class API_endpoints {
     private TagZrno tagZrno;
 
     @Inject
-    private UporabnikZrno uporabnikZrno;
-
-    @Inject
     private OdgovorZrno odgovorZrno;
 
     @Inject
     private VprasanjeZrno vprasanjeZrno;
-
-    @Operation(
-            description = "Get user by ID.",
-            summary = "Users",
-            tags = "users",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "User",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Uporabnik.class))),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "User not found"
-                    )})
-    @Path("uporabniki/{id}")
-    @GET
-    public Response vrniUporabnika(
-            @Parameter(description = "This is an ID of a user.", required = true)
-            @PathParam("id") Integer id) throws NotFoundException {
-        Uporabnik uporabnik = uporabnikZrno.pridobiUporabnika(id);
-
-        if (uporabnik != null) {
-            return Response.ok().entity(uporabnik).build();
-        } else {
-            throw new NotFoundException();
-        }
-    }
 
     @Operation(
             description = "Get list of questions by tag.",
@@ -152,13 +117,29 @@ public class API_endpoints {
                 .build();
     }
 
+    @Operation(
+            description = "Returns a list of available tags.",
+            summary = "Response",
+            tags = "tags",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK"
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "No tags found"
+                    )})
     @Path("tags")
     @GET
     public Response pridobiTage() {
+        List<Tag> tags = tagZrno.pridobiVseTage();
+        if (tags.isEmpty()) {
+            throw new NotFoundException("No tags found");
+        }
         return  Response
                 .ok()
-                .entity(tagZrno.pridobiVseTage())
+                .entity(tags)
                 .build();
     }
 }
-

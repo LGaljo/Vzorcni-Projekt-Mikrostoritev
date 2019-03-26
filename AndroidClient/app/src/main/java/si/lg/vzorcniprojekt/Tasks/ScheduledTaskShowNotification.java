@@ -2,13 +2,16 @@ package si.lg.vzorcniprojekt.Tasks;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import si.lg.vzorcniprojekt.Objects.Question;
 import si.lg.vzorcniprojekt.Objects.SaveObj;
 import si.lg.vzorcniprojekt.R;
+import si.lg.vzorcniprojekt.ResponseActivity;
 
 public class ScheduledTaskShowNotification implements Runnable {
     private static final String TAG = "ScheduledTaskShowNotification";
@@ -43,6 +46,14 @@ public class ScheduledTaskShowNotification implements Runnable {
                     channelId, channelName, importance);
             notificationManager.createNotificationChannel(mChannel);
         }
+
+        Intent intent = new Intent(context, ResponseActivity.class);
+        intent.putExtra("question", question.question);
+        intent.putExtra("question_id", question.id);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(contentIntent);
 
         notificationManager.notify(notificationId, mBuilder.build());
     }

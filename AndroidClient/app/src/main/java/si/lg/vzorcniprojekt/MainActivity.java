@@ -1,7 +1,8 @@
-package si.lg.vzorcniprojekt.Activities;
+package si.lg.vzorcniprojekt;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.style.QuoteSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,22 +20,26 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import si.lg.vzorcniprojekt.DataClass;
-import si.lg.vzorcniprojekt.ListViewItemCheckboxBaseAdapter;
 import si.lg.vzorcniprojekt.Objects.ListViewItemDTO;
+import si.lg.vzorcniprojekt.Objects.Question;
 import si.lg.vzorcniprojekt.Objects.SaveObj;
 import si.lg.vzorcniprojekt.Objects.Tag;
-import si.lg.vzorcniprojekt.R;
 import si.lg.vzorcniprojekt.Tasks.ScheduledTaskShowNotification;
-import si.lg.vzorcniprojekt.VolleyTool;
+
+import static si.lg.vzorcniprojekt.Objects.SaveObj.baseAPIURL;
+import static si.lg.vzorcniprojekt.Objects.SaveObj.questions;
+import static si.lg.vzorcniprojekt.Objects.SaveObj.selectedTags;
+import static si.lg.vzorcniprojekt.Objects.SaveObj.tags;
 
 public class MainActivity extends AppCompatActivity {
-    private final static String TAG = MainActivity.class.toString();
+    private final static String TAG = "MSMS";
     private List<ListViewItemDTO> ret;
     private ListView listViewWithCheckbox;
     private List<ListViewItemDTO> initItemList;
     private ListViewItemCheckboxBaseAdapter listViewDataAdapter;
-    public static TextView box;
+    private TextView boxQs;
+    private UpdateTextView updateTextView;
+    private Runnable updateQuestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,40 +49,47 @@ public class MainActivity extends AppCompatActivity {
         new SaveObj();
 
         listViewWithCheckbox = (ListView) findViewById(R.id.list_view_with_checkbox);
-        box = (TextView)findViewById(R.id.boxWithQs);
+        boxQs = (TextView)findViewById(R.id.boxWithQs);
         initItemList = this.getInitViewItemDtoList();
         listViewDataAdapter = new ListViewItemCheckboxBaseAdapter(getApplicationContext(), initItemList);
         listViewDataAdapter.notifyDataSetChanged();
-
         listViewWithCheckbox.setAdapter(listViewDataAdapter);
 
         onItemClickListSet();
+        createRunnables();
 
-        Button start = (Button) findViewById(R.id.startJob);
-        Button stop = (Button)findViewById(R.id.cancelJob);
+        Button update = (Button) findViewById(R.id.getQs);
         Button askme = (Button)findViewById(R.id.ask_me);
 
-        start.setOnClickListener(new View.OnClickListener() {
+        update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataClass.scheduleJob(getApplicationContext());
-            }
-        });
-
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DataClass.cancelJob(getApplicationContext());
+                Thread t1 = new Thread(updateQuestions);
+                t1.start();
             }
         });
 
         askme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ScheduledTaskShowNotification scheduledTaskShowNotification = new ScheduledTaskShowNotification(getApplicationContext());
-                scheduledTaskShowNotification.run();
+                if (!questions.isEmpty()) {
+                    ScheduledTaskShowNotification scheduledTaskShowNotification = new ScheduledTaskShowNotification(getApplicationContext());
+                    scheduledTaskShowNotification.run();
+                }
             }
         });
+
+        updateTextView = new UpdateTextView() {
+            @Override
+            public void updateTextView(String myString) {
+                boxQs.append(myString);
+            }
+
+            @Override
+            public void clearTextView() {
+                boxQs.setText("");
+            }
+        };
     }
 
     private void onItemClickListSet() {
@@ -113,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     // Return an initialize list of ListViewItemDTO.
     private List<ListViewItemDTO> getInitViewItemDtoList() {
         Log.d(TAG, "getInitViewItemDtoList: Zacni pridobivanje podatkov");
@@ -148,11 +161,65 @@ public class MainActivity extends AppCompatActivity {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+
+                        getInitViewItemDtoList();
                     }
                 }
+
+                Thread t1 = new Thread(updateQuestions);
+                t1.start();
             }
         });
 
         return ret;
+    }
+
+    private void createRunnables() {
+        updateQuestions = new Runnable() {
+            @Override
+            public void run() {
+                updateTextView.clearTextView();
+                Log.d(TAG, "Selected tags size " + tags.size());
+                for (int i = 0; i < tags.size(); i++) {
+                    String url = SaveObj.baseAPIURL + "vprasanje/" + tags.get(i).id;
+                    Log.d(TAG, url);
+                    VolleyTool vt = new VolleyTool(getApplicationContext(), url);
+
+                    vt.executeRequest(Request.Method.GET, new VolleyTool.VolleyCallback() {
+
+                        @Override
+                        public void getResponse(String response) {
+                            if (response != null) {
+                                try {
+                                    Log.d(TAG, response);
+                                    JSONArray jsonArray = new JSONArray(response);
+
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject item = jsonArray.getJSONObject(i);
+
+                                        Question question = new Question();
+                                        Double avg = item.getDouble("avg");
+
+                                        JSONObject vpr = item.getJSONObject("vprasanje");
+
+                                        question.id = vpr.getInt("id");
+                                        question.question = vpr.getString("question");
+                                        question.tag = tags.get(i);
+                                        question.avgValue = avg;
+
+                                        SaveObj.questions.add(question);
+
+                                        updateTextView.updateTextView(question.id + ": " + question.question + " - " + question.avgValue + "\n");
+                                    }
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        };
     }
 }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">VzorcniProjekt</string>
-    <string name="vpra_anja">Questions:</string>
     <string name="ask_me">Ask me</string>
-    <string name="cancel_service">Cancel service</string>
-    <string name="start_service">Start service</string>
+    <string name="get_vls">Update questions</string>
+    <string name="possible_tags">Possible tags:</string>
+    <string name="responses">Questions:</string>
 </resources>

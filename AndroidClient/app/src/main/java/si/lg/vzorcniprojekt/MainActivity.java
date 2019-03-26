@@ -64,8 +64,7 @@ public class MainActivity extends AppCompatActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Thread t1 = new Thread(updateQuestions);
-                t1.start();
+                updateQuestions.run();
             }
         });
 
@@ -165,9 +164,7 @@ public class MainActivity extends AppCompatActivity {
                         getInitViewItemDtoList();
                     }
                 }
-
-                Thread t1 = new Thread(updateQuestions);
-                t1.start();
+                updateQuestions.run();
             }
         });
 
@@ -208,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
                                         question.avgValue = avg;
 
                                         SaveObj.questions.add(question);
-
                                         updateTextView.updateTextView(question.id + ": " + question.question + " - " + question.avgValue + "\n");
                                     }
 

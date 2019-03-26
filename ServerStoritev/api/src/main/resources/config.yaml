@@ -8,7 +8,7 @@ kumuluzee:
       connection-url: jdbc:postgresql://manny.db.elephantsql.com:5432/soovegrb
       username: soovegrb
       password: I65GuuTJAqYJtWNoShB1hkoTmVftTrl3
-      max-pool-size: 1
+      max-pool-size: 5
   health:
     servlet:
       mapping: /health

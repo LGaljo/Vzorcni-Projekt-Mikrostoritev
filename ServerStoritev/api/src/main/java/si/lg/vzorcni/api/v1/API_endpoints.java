@@ -159,11 +159,11 @@ public class API_endpoints {
     public Response pridobiVrednost(
             @Parameter(description = "This is an ID of a tag which is then matched with question.", required = true)
             @PathParam("vpr_id") Integer vpr_id) throws NotFoundException {
-        Double vrednost = odgovorZrno.pridobiVrednost(vprasanjeZrno.pridobiVprasanje(vpr_id));
+        Vprasanje vprasanje = vprasanjeZrno.pridobiVprasanje(vpr_id);
 
         return Response
                 .ok()
-                .entity(vrednost)
+                .entity(odgovorZrno.pridobiVrednost(vprasanje))
                 .build();
     }
 }

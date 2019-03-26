@@ -19,6 +19,4 @@ public class TagZrno {
     public List<Tag> pridobiVseTage() {
         return entityManager.createNamedQuery("Tag.getAll", Tag.class).getResultList();
     }
-
-
 }

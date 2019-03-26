@@ -1,6 +1,7 @@
 package si.lg.vzorcni.storitve;
 
 import si.lg.vzorcni.entitete.Odgovor;
+import si.lg.vzorcni.entitete.OdgovorDTO;
 import si.lg.vzorcni.entitete.Vprasanje;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,7 +18,7 @@ public class OdgovorZrno {
     private Double pridobiPovprecje(List<Odgovor> list) {
         Double avg = 0.0;
         for (Odgovor os : list) {
-            avg += os.getAnswer();
+            avg += os.getValue();
         }
 
         return avg/list.size();
@@ -27,7 +28,7 @@ public class OdgovorZrno {
     public Double dodajOdgovor(Vprasanje vpr, Integer odgovor) {
         Odgovor o = new Odgovor();
         o.setQuestion(vpr);
-        o.setAnswer(odgovor);
+        o.setValue(odgovor);
 
         try {
             entityManager.persist(o);
@@ -44,9 +45,14 @@ public class OdgovorZrno {
         return pridobiPovprecje(qs);
     }
 
-    public Double pridobiVrednost(Vprasanje vpr) {
+    public OdgovorDTO pridobiVrednost(Vprasanje vpr) {
         List<Odgovor> qs = entityManager.createNamedQuery("Odgovor.getByQuestion", Odgovor.class).setParameter("q_id", vpr.getId()).getResultList();
+        OdgovorDTO dto = new OdgovorDTO(0.0, vpr);
 
-        return pridobiPovprecje(qs);
+        if (!qs.isEmpty()) {
+            dto.setAvg(pridobiPovprecje(qs));
+        }
+
+        return dto;
     }
 }

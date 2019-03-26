@@ -17,7 +17,7 @@ public class Odgovor {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
     @Column(columnDefinition = "int default 0")
-    private Integer answer;
+    private Integer value;
 
     public Odgovor() {
     }
@@ -46,11 +46,11 @@ public class Odgovor {
         this.date = date;
     }
 
-    public Integer getAnswer() {
-        return answer;
+    public Integer getValue() {
+        return value;
     }
 
-    public void setAnswer(Integer answer) {
-        this.answer = answer;
+    public void setValue(Integer value) {
+        this.value = value;
     }
 }
